@@ -3,10 +3,10 @@ import Sidebar from '@/components/Sidebar.vue'
 </script>
 
 <template>
-  <div class="px-10">
-    <div class="grid grid-cols-[130px_1fr] gap-15 py-10">
+  <div>
+    <div class="grid grid-cols-[130px_1fr] h-dvh items-start gap-12">
       <Sidebar />
-      <main class="pt-10">
+      <main class='container py-10 h-full'>
         <router-view />
       </main>
     </div>

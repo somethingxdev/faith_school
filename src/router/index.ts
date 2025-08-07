@@ -33,8 +33,29 @@ const router = createRouter({
           component: () => import('@/views/teacher/MyLessonsView.vue'),
         },
         {
-          path: '',
-          redirect: { name: 'teacher-lessons' },
+          path: 'rate-lesson',
+          name: 'teacher-rate-lesson',
+          component: () => import('@/views/teacher/RateLessonView.vue'),
+        },
+        {
+          path: 'rate-lesson-details',
+          name: 'teacher-rate-lesson-details',
+          component: () => import('@/views/teacher/RateLessonDetailsView.vue'),
+        },
+        {
+          path: 'rating-category',
+          name: 'teacher-rating-category',
+          component: () => import('@/views/teacher/RatingCategoryView.vue'),
+        },
+        {
+          path: 'profile',
+          name: 'teacher-profile',
+          component: () => import('@/views/teacher/ProfileView.vue'),
+        },
+        {
+          path: 'profile/edit',
+          name: 'teacher-profile-edit',
+          component: () => import('@/views/teacher/EditProfileView.vue'),
         },
       ],
     },

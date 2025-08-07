@@ -1,34 +1,30 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { useRoute, RouterLink } from 'vue-router'
 
 import { BookOpenIcon, StarIcon, CogIcon, UserIcon } from 'lucide-vue-next'
 
 const navigation = [
   { name: 'Мои уроки', href: '/teacher/lessons', icon: BookOpenIcon },
-  { name: 'Избранное', href: '#', icon: StarIcon },
-  { name: 'Настройки', href: '#', icon: CogIcon },
-  { name: 'Профиль', href: '#', icon: UserIcon },
+  { name: 'Оценка урока', href: '/teacher/rate-lesson', icon: StarIcon },
+  { name: 'Настройки', href: '/teacher/rating-category', icon: CogIcon },
+  { name: 'Профиль', href: '/teacher/profile', icon: UserIcon },
 ]
 
-const activeLink = ref(navigation[0].href)
+const route = useRoute()
+
+console.log(route.path)
 </script>
 
 <template>
-  <aside class="bg-surface py-10 w-[120px] shrink-0 rounded-base">
-    <nav class="flex flex-col items-center gap-10 pt-4">
-      <RouterLink
-        v-for="item in navigation"
-        :key="item.name"
-        :to="item.href"
-        @click="activeLink = item.href"
-      >
-        <component
-          :is="item.icon"
-          class="size-8 text-gray"
-          :class="{ 'text-black': item.href === activeLink }"
-        />
-      </RouterLink>
+  <aside class="bg-surface py-10 h-full w-[120px]">
+    <nav>
+      <ul class="flex items-center flex-col gap-10">
+        <li v-for="item in navigation" class='text-gray'>
+          <RouterLink :to="item.href">
+            <component :is="item.icon" class='size-9' :class="{ 'text-black': route.path === item.href }" />
+          </RouterLink>
+        </li>
+      </ul>
     </nav>
   </aside>
 </template>

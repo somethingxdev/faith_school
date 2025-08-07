@@ -1,8 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -40,6 +38,14 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
+  /* breakpoints */
+
+  --breakpoint-*: initial;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1380px;
+
   /* App */
   --color-black: #4d4e56;
   --color-green: #96c121;
@@ -59,6 +65,8 @@
   --color-dark-green: #6a9f4d;
   --color-brown: #3a1b03;
   --color-blue: #bcd7d0;
+
+  --bg-gradient: linear-gradient(90deg, #e66a6a 0%, #f2c94c 49.58%, #96c121 100%);
 
   --font-sans: 'Geologica', sans-serif;
   --font-body: 'Manrope', sans-serif;
@@ -90,14 +98,6 @@
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
 }
 
 @layer base {
@@ -105,7 +105,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-base text-black font-body font-medium;
+    @apply bg-base text-black font-body font-medium overflow-x-hidden;
   }
   button {
     @apply cursor-pointer;
@@ -114,5 +114,5 @@
 
 @utility container {
   padding-inline: 1.5rem;
-  /* margin-inline: auto; */
+  margin-inline: auto;
 }

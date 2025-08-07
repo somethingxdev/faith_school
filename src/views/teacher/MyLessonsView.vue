@@ -25,6 +25,24 @@ const lessonsByDate = ref([
     day: 'Среда',
     lessons: [{ time: '9:00-12:00', title: 'Русский язык (5-6 лет)' }],
   },
+  {
+    date: '30 июня',
+    day: 'Понедельник',
+    lessons: [
+      { time: '9:00-12:00', title: 'Русский язык (5-6 лет)' },
+      { time: '13:00-14:00', title: 'Нет названия' },
+      { time: '17:00-18:00', title: 'Нет названия' },
+    ],
+  },
+  {
+    date: '30 июня',
+    day: 'Понедельник',
+    lessons: [
+      { time: '9:00-12:00', title: 'Русский язык (5-6 лет)' },
+      { time: '13:00-14:00', title: 'Нет названия' },
+      { time: '17:00-18:00', title: 'Нет названия' },
+    ],
+  },
 ])
 
 const editLesson = (lesson: { time: string; title: string }) => {
@@ -68,11 +86,11 @@ const editLesson = (lesson: { time: string; title: string }) => {
                 </Button>
               </DialogTrigger>
               <DialogContent class="sm:max-w-[600px] pt-15">
-                <Input id="name" class="text-gray" :defaultValue="lesson.title" />
+                <Input id="name" :defaultValue="lesson.title" />
                 <DialogFooter class="sm:flex-col">
                   <Button type="submit">Сохранить</Button>
                   <DialogClose as-child>
-                    <Button type="button" variant="secondary">Отмена</Button>
+                    <Button type="button" variant="outline">Отмена</Button>
                   </DialogClose>
                 </DialogFooter>
               </DialogContent>
