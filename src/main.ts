@@ -3,7 +3,7 @@ import '@fontsource/geologica/400.css'
 import '@fontsource/geologica/500.css'
 import '@fontsource/geologica/600.css'
 import '@fontsource/geologica/700.css'
-
+import '@fontsource/manrope/500.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 

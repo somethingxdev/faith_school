@@ -61,6 +61,7 @@
   --color-blue: #bcd7d0;
 
   --font-sans: 'Geologica', sans-serif;
+  --font-body: 'Manrope', sans-serif;
 }
 
 :root {
@@ -104,7 +105,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-base text-black font-sans;
+    @apply bg-base text-black font-body font-medium;
   }
   button {
     @apply cursor-pointer;

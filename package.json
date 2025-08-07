@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@fontsource/geologica": "latest",
+    "@fontsource/manrope": "^5.2.6",
     "@tailwindcss/vite": "latest",
     "@vee-validate/zod": "latest",
     "@vueuse/core": "latest",

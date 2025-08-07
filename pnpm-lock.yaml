@@ -11,6 +11,9 @@ importers:
       '@fontsource/geologica':
         specifier: latest
         version: 5.2.6
+      '@fontsource/manrope':
+        specifier: ^5.2.6
+        version: 5.2.6
       '@tailwindcss/vite':
         specifier: latest
         version: 4.1.11(vite@7.0.5(@types/node@22.16.5)(jiti@2.4.2)(lightningcss@1.30.1))
@@ -469,6 +472,9 @@ packages:
 
   '@fontsource/geologica@5.2.6':
     resolution: {integrity: sha512-t5g1IpE+eZaZ+QHPxQ8WlIpE/dqRaILRO2nocHCdafCrIR+uoT1j4WhX8eY/zGMLG8A4fHyZAljgAT9NH8YCXA==}
+
+  '@fontsource/manrope@5.2.6':
+    resolution: {integrity: sha512-tboCPLGXWWkNORL7gRhA1m16FJj2QuObk2lhBvkNrpjW0911pGawvHwxuierKHojPtXptfMJo7CUWxXGkKN5zA==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -2425,6 +2431,8 @@ snapshots:
       - vue
 
   '@fontsource/geologica@5.2.6': {}
+
+  '@fontsource/manrope@5.2.6': {}
 
   '@humanfs/core@0.19.1': {}
 
