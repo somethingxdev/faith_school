@@ -127,6 +127,16 @@ const assignSummary = computed(() => {
   return parts.length ? parts.join(' • ') : 'Выберите пользователей'
 })
 
+// Tri-state for select-all checkboxes
+const classesAllChecked = computed(() => !!editing.value && editing.value.targetClasses.length === allClasses.length)
+const classesIndeterminate = computed(
+  () => !!editing.value && editing.value.targetClasses.length > 0 && editing.value.targetClasses.length < allClasses.length,
+)
+const teachersAllChecked = computed(() => !!editing.value && editing.value.targetTeachers.length === allTeachers.length)
+const teachersIndeterminate = computed(
+  () => !!editing.value && editing.value.targetTeachers.length > 0 && editing.value.targetTeachers.length < allTeachers.length,
+)
+
 // Modal state
 const isOpen = ref(false)
 const editing = ref<Survey | null>(null)
@@ -146,7 +156,12 @@ function openAdd() {
   isOpen.value = true
 }
 function openEdit(row: Survey) {
-  editing.value = { ...row, options: row.options ? [...row.options] : [] }
+  const cloned: Survey = { ...row, options: row.options ? [...row.options] : [] }
+  // Normalize "Все учителя" to full list for checkbox UI
+  if (cloned.targetTeachers.includes('Все учителя')) {
+    cloned.targetTeachers = [...allTeachers]
+  }
+  editing.value = cloned
   isOpen.value = true
 }
 function addOption() {
@@ -159,25 +174,19 @@ function removeOption(idx: number) {
   if (!editing.value) return
   editing.value.options = (editing.value.options || []).filter((_, i) => i !== idx)
 }
-function toggleAll(list: 'classes' | 'teachers') {
-  if (!editing.value) return
-  if (list === 'classes') {
-    const all = allClasses
-    const full = editing.value.targetClasses.length === all.length
-    editing.value.targetClasses = full ? [] : [...all]
-  } else {
-    const all = allTeachers
-    const full = editing.value.targetTeachers.length === all.length
-    editing.value.targetTeachers = full ? [] : [...all]
-  }
-}
 function saveSurvey() {
   if (!editing.value) return
-  if (editing.value.id === 0) {
+  // Prepare a copy to persist
+  const payload: Survey = { ...editing.value }
+  // Compress full teacher selection to sentinel for table display
+  if (payload.targetTeachers.length === allTeachers.length) {
+    payload.targetTeachers = ['Все учителя']
+  }
+  if (payload.id === 0) {
     const nextId = Math.max(0, ...surveys.value.map((s) => s.id)) + 1
-    surveys.value.push({ ...editing.value, id: nextId })
+    surveys.value.push({ ...payload, id: nextId })
   } else {
-    surveys.value = surveys.value.map((s) => (s.id === editing.value!.id ? { ...editing.value! } : s))
+    surveys.value = surveys.value.map((s) => (s.id === payload.id ? { ...payload } : s))
   }
   isOpen.value = false
 }
@@ -252,8 +261,8 @@ function saveSurvey() {
         <div class="grid gap-5 mb-5">
           <!-- Type selector -->
           <div>
-            <label class="mb-2 block">Тип опроса</label>
-            <RadioGroup v-model="(editing as any).type" class="grid grid-cols-2 gap-3">
+            <label class="mb-4 block text-lg font-sans">Тип опроса</label>
+            <RadioGroup v-model="(editing as any).type" class="grid gap-3">
               <div class="flex items-center gap-2">
                 <RadioGroupItem id="type-numeric" value="numeric" />
                 <Label for="type-numeric">Числовой (1-5)</Label>
@@ -268,18 +277,18 @@ function saveSurvey() {
           <!-- Options for descriptive -->
           <div v-if="editing?.type === 'descriptive'">
             <label class="mb-2 block">Варианты ответа</label>
-            <div class="flex gap-3 mb-3">
+            <div class="flex flex-col items-start gap-3 mb-3">
               <Input v-model="newOption" placeholder="Введите вариант ответа" />
-              <Button type="button" @click="addOption">Добавить вариант</Button>
+              <Button type="button" variant="ghost" size="sm" @click="addOption"> <PlusIcon class="size-5" /> Добавить вариант</Button>
             </div>
             <ul class="space-y-2">
               <li
                 v-for="(opt, i) in editing?.options || []"
                 :key="i"
-                class="flex items-center justify-between rounded-base border border-surface p-2"
+                class="flex items-center justify-between rounded-base border border-surface pl-5 overflow-hidden"
               >
                 <span>{{ opt }}</span>
-                <Button type="button" variant="ghost" size="sm" @click="removeOption(i)">Удалить</Button>
+                <Button type="button" variant="ghost" class="rounded-none" size="sm" @click="removeOption(i)">Удалить</Button>
               </li>
             </ul>
           </div>
@@ -295,33 +304,44 @@ function saveSurvey() {
             <label class="mb-2 block">Назначить на</label>
             <Popover>
               <PopoverTrigger as-child>
-                <Button variant="outline" class="w-full justify-between">
-                  <span>{{ assignSummary }}</span>
+                <Button variant="ghost" class="w-full bg-surface justify-between">
+                  <span class="normal-case font-body">{{ assignSummary }}</span>
                   <ChevronDown class="size-4 opacity-60" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent class="w-[360px] p-3">
-                <div class="space-y-4">
+              <PopoverContent class="p-3 w-(--reka-popover-trigger-width)">
+                <div class="space-y-4 grid grid-cols-2">
                   <!-- Classes group -->
                   <div>
-                    <div class="mb-2 flex items-center justify-between">
-                      <span class="text-sm font-medium">Классы</span>
-                      <Button variant="outline" size="sm" type="button" @click="toggleAll('classes')">{{
-                        (editing?.targetClasses.length || 0) === allClasses.length ? 'Снять всё' : 'Выбрать все'
-                      }}</Button>
-                    </div>
-                    <div class="space-y-2 max-h-40 overflow-auto rounded-base border border-surface p-3">
+                    <span class="font-sans font-medium block mb-3">Классы</span>
+
+                    <div class="space-y-2">
+                      <div class="flex items-center gap-2">
+                        <Checkbox
+                          id="class-all"
+                          :model-value="classesAllChecked ? true : classesIndeterminate ? 'indeterminate' : false"
+                          @update:modelValue="
+                            (value: boolean | 'indeterminate') => {
+                              const checked = value === true
+                              editing!.targetClasses = checked ? [...allClasses] : []
+                            }
+                          "
+                        />
+                        <Label for="class-all">Все классы</Label>
+                      </div>
                       <div v-for="(c, idx) in allClasses" :key="c" class="flex items-center gap-2">
                         <Checkbox
                           :id="'class-' + idx"
                           :model-value="editing?.targetClasses.includes(c)"
-                          @update:modelValue="(value: boolean | 'indeterminate') => {
-                            const checked = value === true
-                            const list = new Set(editing!.targetClasses)
-                            if (checked) list.add(c)
-                            else list.delete(c)
-                            editing!.targetClasses = Array.from(list)
-                          }"
+                          @update:modelValue="
+                            (value: boolean | 'indeterminate') => {
+                              const checked = value === true
+                              const list = new Set(editing!.targetClasses)
+                              if (checked) list.add(c)
+                              else list.delete(c)
+                              editing!.targetClasses = Array.from(list)
+                            }
+                          "
                         />
                         <Label :for="'class-' + idx">{{ c }}</Label>
                       </div>
@@ -329,24 +349,34 @@ function saveSurvey() {
                   </div>
                   <!-- Teachers group -->
                   <div>
-                    <div class="mb-2 flex items-center justify-between">
-                      <span class="text-sm font-medium">Учителя</span>
-                      <Button variant="outline" size="sm" type="button" @click="toggleAll('teachers')">{{
-                        (editing?.targetTeachers.length || 0) === allTeachers.length ? 'Снять всё' : 'Выбрать всех'
-                      }}</Button>
-                    </div>
-                    <div class="space-y-2 max-h-40 overflow-auto rounded-base border border-surface p-3">
+                    <span class="font-sans font-medium block mb-3">Учителя</span>
+                    <div class="space-y-2">
+                      <div class="flex items-center gap-2">
+                        <Checkbox
+                          id="teacher-all"
+                          :model-value="teachersAllChecked ? true : teachersIndeterminate ? 'indeterminate' : false"
+                          @update:modelValue="
+                            (value: boolean | 'indeterminate') => {
+                              const checked = value === true
+                              editing!.targetTeachers = checked ? [...allTeachers] : []
+                            }
+                          "
+                        />
+                        <Label for="teacher-all">Все учителя</Label>
+                      </div>
                       <div v-for="(t, idx) in allTeachers" :key="t" class="flex items-center gap-2">
                         <Checkbox
                           :id="'teacher-' + idx"
                           :model-value="editing?.targetTeachers.includes(t)"
-                          @update:modelValue="(value: boolean | 'indeterminate') => {
-                            const checked = value === true
-                            const list = new Set(editing!.targetTeachers)
-                            if (checked) list.add(t)
-                            else list.delete(t)
-                            editing!.targetTeachers = Array.from(list)
-                          }"
+                          @update:modelValue="
+                            (value: boolean | 'indeterminate') => {
+                              const checked = value === true
+                              const list = new Set(editing!.targetTeachers)
+                              if (checked) list.add(t)
+                              else list.delete(t)
+                              editing!.targetTeachers = Array.from(list)
+                            }
+                          "
                         />
                         <Label :for="'teacher-' + idx">{{ t }}</Label>
                       </div>
