@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import AuthLayout from '@/layouts/AuthLayout.vue'
 import TeacherLayout from '@/layouts/TeacherLayout.vue'
+import AdminLayout from '@/layouts/AdminLayout.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,6 +21,51 @@ const router = createRouter({
           path: 'login',
           name: 'login',
           component: () => import('@/views/auth/LoginView.vue'),
+        },
+      ],
+    },
+    {
+      path: '/admin',
+      component: AdminLayout,
+      children: [
+        {
+          path: '',
+          redirect: { name: 'admin-dashboard' },
+        },
+        {
+          path: 'dashboard',
+          name: 'admin-dashboard',
+          component: () => import('@/views/admin/DashboardView.vue'),
+        },
+        {
+          path: 'schedule',
+          name: 'admin-schedule',
+          component: () => import('@/views/admin/ScheduleView.vue'),
+        },
+        {
+          path: 'students',
+          name: 'admin-students',
+          component: () => import('@/views/admin/StudentsView.vue'),
+        },
+        {
+          path: 'classes',
+          name: 'admin-classes',
+          component: () => import('@/views/admin/ClassesView.vue'),
+        },
+        {
+          path: 'teachers',
+          name: 'admin-teachers',
+          component: () => import('@/views/admin/TeachersView.vue'),
+        },
+        {
+          path: 'staff',
+          name: 'admin-staff',
+          component: () => import('@/views/admin/StaffView.vue'),
+        },
+        {
+          path: 'surveys',
+          name: 'admin-surveys',
+          component: () => import('@/views/admin/SurveysView.vue'),
         },
       ],
     },
