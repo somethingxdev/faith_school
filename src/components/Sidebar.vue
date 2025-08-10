@@ -19,11 +19,13 @@ const props = defineProps<{
 
 const route = useRoute()
 
-const navItems = computed(() => props.navigation?.length ? props.navigation : defaultNavigation)
+const navItems = computed(() => (props.navigation?.length ? props.navigation : defaultNavigation))
 </script>
 
 <template>
-  <aside class="bg-surface py-10 h-full w-[120px]">
+  <aside
+    class="py-10 m-10 rounded-base sticky top-10 w-[130px] relative after:absolute after:top-0 after:left-0 after:rounded-base after:w-[130px] after:-z-10 after:h-[calc(100vh-80px)] after:bg-surface"
+  >
     <nav>
       <ul class="flex items-center flex-col gap-10">
         <li v-for="item in navItems" class="text-gray">

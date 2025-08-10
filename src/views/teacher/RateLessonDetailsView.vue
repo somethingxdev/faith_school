@@ -20,7 +20,6 @@ const students = ref<Student[]>([
   { id: 3, name: 'Алексей Иванов', score: 0, rated: false },
   { id: 4, name: 'Елена Кузнецова', score: 0, rated: false },
   { id: 5, name: 'Дмитрий Смирнов', score: 9, rated: true },
-  
 ])
 
 const selectedStudent = ref<Student>(students.value[0])
@@ -84,7 +83,7 @@ const isAnyStudentSelected = computed(() => {
           <span class="text-xl font-sans text-black">{{ student.name }}</span>
         </div>
         <div class="flex items-center gap-2">
-          <span v-if="student.rated" class="text-lg text-black font-bold">{{ student.score }}</span>
+          <span v-if="student.rated" class="text-black font-bold">{{ student.score }}</span>
 
           <svg v-if="student.rated" width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -153,10 +152,10 @@ const isAnyStudentSelected = computed(() => {
           <PopoverTrigger as-child>
             <div class="flex items-center space-x-2">
               <Checkbox :model-value="isAnyStudentSelected" disabled />
-              <label class="text-lg text-black cursor-pointer">Применить к другим ученикам</label>
+              <label class="text-black cursor-pointer">Применить к другим ученикам</label>
             </div>
           </PopoverTrigger>
-          <PopoverContent side='left' class="w-80">
+          <PopoverContent side="left" class="w-80">
             <div class="grid gap-4">
               <div class="space-y-2">
                 <h4 class="font-medium leading-none">Выберите учеников</h4>
@@ -177,7 +176,7 @@ const isAnyStudentSelected = computed(() => {
           </PopoverContent>
         </Popover>
       </div>
-      <Button class='w-full'>Сохранить</Button>
+      <Button class="w-full">Сохранить</Button>
     </div>
   </div>
 </template>

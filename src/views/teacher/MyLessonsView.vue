@@ -56,7 +56,7 @@ const editLesson = (lesson: { time: string; title: string }) => {
     <div v-for="group in lessonsByDate" :key="group.date" class="grid grid-cols-[120px_1fr] gap-55 mb-5 last:mb-0 pb-5 border-b border-surface">
       <div class="flex flex-col gap-1">
         <h2 class="text-xl/none text-black font-sans">{{ group.date }}</h2>
-        <p class="text-gray text-lg">{{ group.day }}</p>
+        <p class="text-gray">{{ group.day }}</p>
       </div>
       <div class="relative pl-8">
         <!-- Timeline line -->
@@ -76,8 +76,8 @@ const editLesson = (lesson: { time: string; title: string }) => {
               }"
             ></div>
             <div class="flex flex-col gap-1">
-              <span class="text-lg text-black">{{ lesson.title }}</span>
-              <span class="text-lg text-gray">{{ lesson.time }}</span>
+              <span class="text-black">{{ lesson.title }}</span>
+              <span class="text-gray">{{ lesson.time }}</span>
             </div>
             <Dialog>
               <DialogTrigger as-child>

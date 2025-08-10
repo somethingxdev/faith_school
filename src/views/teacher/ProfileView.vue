@@ -30,9 +30,9 @@ const assignedClasses = ['Русский язык (3-6 лет)', 'Русский
   <Separator class="my-10" />
 
   <div>
-    <h2 class="text-lg font-sans text-black mb-4">Закрепленные классы:</h2>
+    <h2 class="font-sans text-black mb-4">Закрепленные классы:</h2>
     <div class="flex gap-4">
-      <div v-for="cls in assignedClasses" :key="cls" class="px-5 py-4 bg-white rounded-base border border-surface text-lg">
+      <div v-for="cls in assignedClasses" :key="cls" class="px-5 py-4 bg-white rounded-base border border-surface">
         {{ cls }}
       </div>
     </div>

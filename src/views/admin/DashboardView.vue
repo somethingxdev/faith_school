@@ -40,15 +40,15 @@ const attendanceData = ref(
   <!-- KPI Cards -->
   <div class="flex gap-4 mb-7.5">
     <div class="bg-white rounded-base border border-surface p-5 space-y-4">
-      <p class="text-black text-lg/none">Общая посещаемость</p>
+      <p class="text-black /none">Общая посещаемость</p>
       <p class="text-4xl/none text-black font-sans">{{ overallAttendance }}%</p>
     </div>
     <div class="bg-white rounded-base border border-surface p-5 space-y-4">
-      <p class="text-black text-lg/none">Заработано динариев</p>
+      <p class="text-black /none">Заработано динариев</p>
       <p class="text-4xl/none text-black font-sans">{{ earned.toLocaleString('ru-RU') }}</p>
     </div>
     <div class="bg-white rounded-base border border-surface p-5 space-y-4">
-      <p class="text-black text-lg/none">Средняя оценка преподавания</p>
+      <p class="text-black /none">Средняя оценка преподавания</p>
       <p class="text-4xl/none text-black font-sans">{{ avgTeachingScore }}/5</p>
     </div>
   </div>
@@ -93,7 +93,7 @@ const attendanceData = ref(
     <!-- Right column -->
     <div class="space-y-4">
       <div class="bg-white rounded-base border border-surface p-6">
-        <div class="flex items-center justify-between text-black text-lg">
+        <div class="flex items-center justify-between text-black">
           <h3>Очки</h3>
           <span>{{ month }}</span>
         </div>
@@ -113,7 +113,7 @@ const attendanceData = ref(
 
       <div class="bg-white rounded-base border border-surface p-6">
         <div class="flex items-center justify-between mb-7.5">
-          <h3 class="text-lg text-black">Средняя оценка преподавания</h3>
+          <h3 class="text-black">Средняя оценка преподавания</h3>
           <span class="text-gray">{{ month }}</span>
         </div>
 

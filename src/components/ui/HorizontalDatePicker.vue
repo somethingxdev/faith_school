@@ -26,7 +26,7 @@ const getDayName = (date: any) => {
       class="flex flex-col items-center gap-2.5 py-3.5 justify-center w-12.5 rounded-base cursor-pointer transition-colors text-gray"
       :class="{ 'bg-green text-white': selectedDate.compare(date) === 0, 'hover:bg-gray-100': selectedDate.compare(date) !== 0 }"
     >
-      <span class="text-lg/none">{{ getDayName(date) }}</span>
+      <span class="/none">{{ getDayName(date) }}</span>
       <span class="text-xl/none font-sans">{{ date.day }}</span>
 
       <span class="size-1.5 rounded-full bg-white" v-show="selectedDate.compare(date) === 0"> </span>

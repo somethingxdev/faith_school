@@ -26,27 +26,27 @@ const togglePasswordVisibility = () => {
     <div>
       <div class="grid grid-cols-2 gap-6 mb-6">
         <div>
-          <label for="firstName" class="block text-lg font-sans text-black mb-2">Имя</label>
+          <label for="firstName" class="block font-sans text-black mb-2">Имя</label>
           <Input id="firstName" defaultValue="Иван" />
         </div>
         <div>
-          <label for="lastName" defaultValue="block text-lg font-sans text-black mb-2">Фамилия</label>
+          <label for="lastName" defaultValue="block  font-sans text-black mb-2">Фамилия</label>
           <Input id="lastName" value="Иванов" />
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-6 mb-12">
         <div>
-          <label for="email" class="block text-lg font-sans text-black mb-2">E-mail</label>
+          <label for="email" class="block font-sans text-black mb-2">E-mail</label>
           <Input id="email" defaultValue="@ivan.ivanov" />
         </div>
         <div>
-          <label for="password" class="block text-lg font-sans text-black mb-2">Пароль</label>
+          <label for="password" class="block font-sans text-black mb-2">Пароль</label>
           <div class="relative">
             <Input id="password" :type="isPasswordVisible ? 'text' : 'password'" defaultValue="password" />
             <button @click="togglePasswordVisibility" class="absolute right-3 top-1/2 -translate-y-1/2">
-                <EyeIcon v-if="isPasswordVisible" class="size-6 text-gray-400" />
-                <EyeOffIcon v-else class="size-6 text-gray-400" />
+              <EyeIcon v-if="isPasswordVisible" class="size-6 text-gray-400" />
+              <EyeOffIcon v-else class="size-6 text-gray-400" />
             </button>
           </div>
         </div>

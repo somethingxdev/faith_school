@@ -5,7 +5,7 @@
         <img :src="Logo" alt="logo" class="w-25 h-auto" />
         <RouterView />
         <div class="flex items-center gap-3">
-          <span class="text-black text-lg font-medium">Powered by</span>
+          <span class="text-black font-medium">Powered by</span>
           <img src="@/assets/bezalel-lab.svg" alt="auth-bottom" />
         </div>
       </div>

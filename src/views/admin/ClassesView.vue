@@ -76,60 +76,58 @@ function saveRow() {
 </script>
 
 <template>
-  <div class="container">
-    <h1 class="text-4xl font-sans text-black mb-4">Управление классами</h1>
-    <ManagementTabs />
+  <h1 class="text-4xl font-sans text-black mb-4">Управление классами</h1>
+  <ManagementTabs />
 
-    <div class="grid grid-cols-2 gap-5 mb-7.5">
-      <div class="relative w-full">
-        <SearchIcon class="absolute left-4 top-1/2 -translate-y-1/2 text-gray size-5" />
-        <Input v-model="query" placeholder="Найти класс" class="pl-11" />
-      </div>
-      <Button class="w-full" @click="openAdd"><PlusIcon class="size-6" /> Добавить класс</Button>
+  <div class="grid grid-cols-2 gap-5 mb-7.5">
+    <div class="relative w-full">
+      <SearchIcon class="absolute left-4 top-1/2 -translate-y-1/2 text-gray size-5" />
+      <Input v-model="query" placeholder="Найти класс" class="pl-11" />
     </div>
-
-    <div class="rounded-base border border-surface overflow-auto">
-      <Table>
-        <TableHeader class="bg-surface">
-          <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
-            <TableHead v-for="header in headerGroup.headers" :key="header.id">
-              <template v-if="!header.isPlaceholder">
-                <FlexRender :render="header.column.columnDef.header" :props="header.getContext()" />
-              </template>
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <template v-if="table.getRowModel().rows.length">
-            <TableRow v-for="row in table.getRowModel().rows" :key="row.id">
-              <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
-                <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
-              </TableCell>
-            </TableRow>
-          </template>
-          <TableRow v-else>
-            <TableCell :colspan="columns.length" class="h-24 text-center text-gray"> Нет данных </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </div>
-
-    <Dialog v-model:open="isOpen">
-      <DialogContent class="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>{{ editing?.id === 0 ? 'Добавить класс' : 'Редактировать класс' }}</DialogTitle>
-        </DialogHeader>
-        <div class="grid gap-4 mb-5">
-          <div>
-            <label class="mb-2 block">Название класса</label>
-            <Input v-model="editing!.name" />
-          </div>
-        </div>
-        <DialogFooter class="sm:flex-col">
-          <Button type="button" @click="saveRow">Сохранить</Button>
-          <DialogClose as-child><Button type="button" variant="outline">Отмена</Button></DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <Button class="w-full" @click="openAdd"><PlusIcon class="size-6" /> Добавить класс</Button>
   </div>
+
+  <div class="rounded-base border border-surface overflow-auto">
+    <Table>
+      <TableHeader class="bg-surface">
+        <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
+          <TableHead v-for="header in headerGroup.headers" :key="header.id">
+            <template v-if="!header.isPlaceholder">
+              <FlexRender :render="header.column.columnDef.header" :props="header.getContext()" />
+            </template>
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <template v-if="table.getRowModel().rows.length">
+          <TableRow v-for="row in table.getRowModel().rows" :key="row.id">
+            <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
+              <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+            </TableCell>
+          </TableRow>
+        </template>
+        <TableRow v-else>
+          <TableCell :colspan="columns.length" class="h-24 text-center text-gray"> Нет данных </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </div>
+
+  <Dialog v-model:open="isOpen">
+    <DialogContent class="sm:max-w-[600px]">
+      <DialogHeader>
+        <DialogTitle>{{ editing?.id === 0 ? 'Добавить класс' : 'Редактировать класс' }}</DialogTitle>
+      </DialogHeader>
+      <div class="grid gap-4 mb-5">
+        <div>
+          <label class="mb-2 block">Название класса</label>
+          <Input v-model="editing!.name" />
+        </div>
+      </div>
+      <DialogFooter class="sm:flex-col">
+        <Button type="button" @click="saveRow">Сохранить</Button>
+        <DialogClose as-child><Button type="button" variant="outline">Отмена</Button></DialogClose>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>

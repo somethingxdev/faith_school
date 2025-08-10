@@ -3,6 +3,7 @@ import HomeView from '@/views/HomeView.vue'
 import AuthLayout from '@/layouts/AuthLayout.vue'
 import TeacherLayout from '@/layouts/TeacherLayout.vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
+import SellerLayout from '@/layouts/SellerLayout.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -67,12 +68,26 @@ const router = createRouter({
           name: 'admin-surveys',
           component: () => import('@/views/admin/SurveysView.vue'),
         },
+        {
+          path: 'notifications',
+          name: 'admin-notifications',
+          component: () => import('@/views/admin/NotificationsView.vue'),
+        },
+        {
+          path: 'ads',
+          name: 'admin-ads',
+          component: () => import('@/views/admin/AdsView.vue'),
+        },
       ],
     },
     {
       path: '/teacher',
       component: TeacherLayout,
       children: [
+        {
+          path: '',
+          redirect: { name: 'teacher-lessons' },
+        },
         {
           path: 'lessons',
           name: 'teacher-lessons',
@@ -102,6 +117,21 @@ const router = createRouter({
           path: 'profile/edit',
           name: 'teacher-profile-edit',
           component: () => import('@/views/teacher/EditProfileView.vue'),
+        },
+      ],
+    },
+    {
+      path: '/seller',
+      component: SellerLayout,
+      children: [
+        {
+          path: '',
+          redirect: { name: 'seller-sell' },
+        },
+        {
+          path: 'sell',
+          name: 'seller-sell',
+          component: () => import('@/views/seller/SellProductView.vue'),
         },
       ],
     },

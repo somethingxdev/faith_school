@@ -10,12 +10,10 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div>
-    <div class="grid grid-cols-[130px_1fr] h-dvh items-start gap-12">
-      <Sidebar :navigation="props.navigation" />
-      <main class="container py-10 h-full">
-        <router-view />
-      </main>
-    </div>
+  <div class="grid grid-cols-[130px_1fr] h-dvh items-start gap-12">
+    <Sidebar :navigation="props.navigation" />
+    <main class="container py-10">
+      <router-view />
+    </main>
   </div>
 </template>

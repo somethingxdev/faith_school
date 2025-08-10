@@ -61,11 +61,9 @@ const columns = [
     header: () => '',
     cell: (ctx) =>
       h('div', { class: 'flex justify-end' }, [
-        h(
-          Button as any,
-          { variant: 'ghost', size: 'icon', onClick: () => openEdit(ctx.row.original) },
-          () => [h(EditIcon as any, { class: 'text-gray size-5' })],
-        ),
+        h(Button as any, { variant: 'ghost', size: 'icon', onClick: () => openEdit(ctx.row.original) }, () => [
+          h(EditIcon as any, { class: 'text-gray size-5' }),
+        ]),
       ]),
   }),
 ]
@@ -102,86 +100,102 @@ function saveRow() {
 </script>
 
 <template>
-  <div class="container">
-    <h1 class="text-4xl font-sans text-black mb-4">Управление учителями</h1>
-    <ManagementTabs />
+  <h1 class="text-4xl font-sans text-black mb-4">Управление учителями</h1>
+  <ManagementTabs />
 
-    <div class="grid grid-cols-3 gap-5 mb-7.5">
-      <div class="relative w-full">
-        <SearchIcon class="absolute left-4 top-1/2 -translate-y-1/2 text-gray size-5" />
-        <Input v-model="query" placeholder="Найти учителя" class="pl-11" />
-      </div>
-      <Select v-model="roleFilter" :value="roleFilter">
-        <SelectTrigger class="w-full">
-          <SelectValue placeholder="Роль" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem v-for="r in roleOptions" :key="r" :value="r">{{ r }}</SelectItem>
-        </SelectContent>
-      </Select>
-      <Button class="w-full" @click="openAdd"><PlusIcon class="size-6" /> Добавить учителя</Button>
+  <div class="grid grid-cols-3 gap-5 mb-7.5">
+    <div class="relative w-full">
+      <SearchIcon class="absolute left-4 top-1/2 -translate-y-1/2 text-gray size-5" />
+      <Input v-model="query" placeholder="Найти учителя" class="pl-11" />
     </div>
+    <Select v-model="roleFilter" :value="roleFilter">
+      <SelectTrigger class="w-full">
+        <SelectValue placeholder="Роль" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem v-for="r in roleOptions" :key="r" :value="r">{{ r }}</SelectItem>
+      </SelectContent>
+    </Select>
+    <Button class="w-full" @click="openAdd"><PlusIcon class="size-6" /> Добавить учителя</Button>
+  </div>
 
-    <div class="rounded-base border border-surface overflow-auto">
-      <Table>
-        <TableHeader class="bg-surface">
-          <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
-            <TableHead v-for="header in headerGroup.headers" :key="header.id">
-              <template v-if="!header.isPlaceholder">
-                <FlexRender :render="header.column.columnDef.header" :props="header.getContext()" />
-              </template>
-            </TableHead>
+  <div class="rounded-base border border-surface overflow-auto">
+    <Table>
+      <TableHeader class="bg-surface">
+        <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
+          <TableHead v-for="header in headerGroup.headers" :key="header.id">
+            <template v-if="!header.isPlaceholder">
+              <FlexRender :render="header.column.columnDef.header" :props="header.getContext()" />
+            </template>
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <template v-if="table.getRowModel().rows.length">
+          <TableRow v-for="row in table.getRowModel().rows" :key="row.id">
+            <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
+              <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+            </TableCell>
           </TableRow>
-        </TableHeader>
-        <TableBody>
-          <template v-if="table.getRowModel().rows.length">
-            <TableRow v-for="row in table.getRowModel().rows" :key="row.id">
-              <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
-                <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
-              </TableCell>
-            </TableRow>
-          </template>
-          <TableRow v-else>
-            <TableCell :colspan="columns.length" class="h-24 text-center text-gray"> Нет данных </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </div>
+        </template>
+        <TableRow v-else>
+          <TableCell :colspan="columns.length" class="h-24 text-center text-gray"> Нет данных </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </div>
 
-    <Dialog v-model:open="isOpen">
-      <DialogContent class="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>{{ editing?.id === 0 ? 'Добавить учителя' : 'Редактировать учителя' }}</DialogTitle>
-        </DialogHeader>
-        <div class="grid gap-4 mb-5">
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="mb-2 block">Имя</label>
-              <Input v-model="editing!.firstName" />
-            </div>
-            <div>
-              <label class="mb-2 block">Фамилия</label>
-              <Input v-model="editing!.lastName" />
-            </div>
+  <Dialog v-model:open="isOpen">
+    <DialogContent class="sm:max-w-[600px]">
+      <DialogHeader>
+        <DialogTitle>{{ editing?.id === 0 ? 'Добавить учителя' : 'Редактировать учителя' }}</DialogTitle>
+      </DialogHeader>
+      <div class="grid gap-4 mb-5">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="mb-2 block">Имя</label>
+            <Input v-model="editing!.firstName" />
           </div>
           <div>
-            <label class="mb-2 block">E-mail / логин</label>
-            <Input v-model="editing!.email" />
-          </div>
-          <div>
-            <label class="mb-2 block">Роли (через запятую)</label>
-            <Input :modelValue="editing?.roles?.join(', ')" @update:modelValue="(v: string | number) => (editing!.roles = String(v).split(',').map(s => s.trim()).filter(Boolean))" />
-          </div>
-          <div>
-            <label class="mb-2 block">Закрепленные классы (через запятую)</label>
-            <Input :modelValue="editing?.classes?.join(', ')" @update:modelValue="(v: string | number) => (editing!.classes = String(v).split(',').map(s => s.trim()).filter(Boolean))" />
+            <label class="mb-2 block">Фамилия</label>
+            <Input v-model="editing!.lastName" />
           </div>
         </div>
-        <DialogFooter class="sm:flex-col">
-          <Button type="button" @click="saveRow">Сохранить</Button>
-          <DialogClose as-child><Button type="button" variant="outline">Отмена</Button></DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  </div>
+        <div>
+          <label class="mb-2 block">E-mail / логин</label>
+          <Input v-model="editing!.email" />
+        </div>
+        <div>
+          <label class="mb-2 block">Роли (через запятую)</label>
+          <Input
+            :modelValue="editing?.roles?.join(', ')"
+            @update:modelValue="
+              (v: string | number) =>
+                (editing!.roles = String(v)
+                  .split(',')
+                  .map((s) => s.trim())
+                  .filter(Boolean))
+            "
+          />
+        </div>
+        <div>
+          <label class="mb-2 block">Закрепленные классы (через запятую)</label>
+          <Input
+            :modelValue="editing?.classes?.join(', ')"
+            @update:modelValue="
+              (v: string | number) =>
+                (editing!.classes = String(v)
+                  .split(',')
+                  .map((s) => s.trim())
+                  .filter(Boolean))
+            "
+          />
+        </div>
+      </div>
+      <DialogFooter class="sm:flex-col">
+        <Button type="button" @click="saveRow">Сохранить</Button>
+        <DialogClose as-child><Button type="button" variant="outline">Отмена</Button></DialogClose>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>

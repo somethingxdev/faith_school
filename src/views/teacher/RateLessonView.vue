@@ -45,7 +45,7 @@ value.value = today(getLocalTimeZone())
 </script>
 
 <template>
-  <div class="container grid grid-cols-[1fr_auto] gap-8 items-start">
+  <div class="grid grid-cols-[1fr_auto] gap-8 items-start">
     <div>
       <h1 class="text-4xl font-sans text-black mb-8">Оценка урока</h1>
 
@@ -80,8 +80,8 @@ value.value = today(getLocalTimeZone())
       <div class="space-y-4">
         <div v-for="lesson in lessons" :key="lesson.id" class="bg-white p-6 rounded-base border border-surface flex justify-between items-center">
           <div class="flex flex-col">
-            <span class="text-lg text-black">{{ lesson.subject }}</span>
-            <span class="text-lg text-gray">{{ lesson.date }} | {{ lesson.time }}</span>
+            <span class="text-black">{{ lesson.subject }}</span>
+            <span class="text-gray">{{ lesson.date }} | {{ lesson.time }}</span>
           </div>
           <RouterLink to="/teacher/rate-lesson-details">
             <Button v-if="!lesson.rated" variant="default" size="sm" class="w-[350px]">Оценить</Button>

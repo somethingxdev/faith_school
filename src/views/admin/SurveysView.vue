@@ -193,220 +193,217 @@ function saveSurvey() {
 </script>
 
 <template>
-  <div class="container">
-    <h1 class="text-4xl font-sans text-black mb-4">Опросы</h1>
+  <h1 class="text-4xl font-sans text-black mb-4">Опросы</h1>
 
-    <div class="relative w-full mb-2.5">
-      <SearchIcon class="absolute left-4 top-1/2 -translate-y-1/2 text-gray size-5" />
-      <Input v-model="query" placeholder="Найти" class="pl-11" />
-    </div>
-    <!-- Controls row -->
-    <div class="grid grid-cols-3 gap-5 mb-7.5">
-      <Select v-model="classFilter" :value="classFilter">
-        <SelectTrigger class="w-full">
-          <SelectValue placeholder="Класс" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem v-for="c in classes" :key="c" :value="c">{{ c }}</SelectItem>
-        </SelectContent>
-      </Select>
-      <Select v-model="typeFilter" :value="typeFilter" class="flex-1">
-        <SelectTrigger class="w-full">
-          <SelectValue placeholder="Тип вопроса" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem v-for="t in types" :key="t" :value="t">{{ t }}</SelectItem>
-        </SelectContent>
-      </Select>
-      <Button @click="openAdd">
-        <PlusIcon class="size-6" />
-        <span class="ml-2">Создать опрос</span>
-      </Button>
-    </div>
+  <div class="relative w-full mb-2.5">
+    <SearchIcon class="absolute left-4 top-1/2 -translate-y-1/2 text-gray size-5" />
+    <Input v-model="query" placeholder="Найти" class="pl-11" />
+  </div>
+  <!-- Controls row -->
+  <div class="grid grid-cols-3 gap-5 mb-7.5">
+    <Select v-model="classFilter" :value="classFilter">
+      <SelectTrigger class="w-full">
+        <SelectValue placeholder="Класс" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem v-for="c in classes" :key="c" :value="c">{{ c }}</SelectItem>
+      </SelectContent>
+    </Select>
+    <Select v-model="typeFilter" :value="typeFilter" class="flex-1">
+      <SelectTrigger class="w-full">
+        <SelectValue placeholder="Тип вопроса" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem v-for="t in types" :key="t" :value="t">{{ t }}</SelectItem>
+      </SelectContent>
+    </Select>
+    <Button @click="openAdd">
+      <PlusIcon class="size-6" />
+      <span class="ml-2">Создать опрос</span>
+    </Button>
+  </div>
 
-    <!-- Table -->
-    <div class="rounded-base border border-surface overflow-auto">
-      <Table>
-        <TableHeader class="bg-surface">
-          <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
-            <TableHead v-for="header in headerGroup.headers" :key="header.id">
-              <template v-if="!header.isPlaceholder">
-                <FlexRender :render="header.column.columnDef.header" :props="header.getContext()" />
-              </template>
-            </TableHead>
+  <!-- Table -->
+  <div class="rounded-base border border-surface overflow-auto">
+    <Table>
+      <TableHeader class="bg-surface">
+        <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
+          <TableHead v-for="header in headerGroup.headers" :key="header.id">
+            <template v-if="!header.isPlaceholder">
+              <FlexRender :render="header.column.columnDef.header" :props="header.getContext()" />
+            </template>
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <template v-if="table.getRowModel().rows.length">
+          <TableRow v-for="row in table.getRowModel().rows" :key="row.id">
+            <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
+              <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+            </TableCell>
           </TableRow>
-        </TableHeader>
-        <TableBody>
-          <template v-if="table.getRowModel().rows.length">
-            <TableRow v-for="row in table.getRowModel().rows" :key="row.id">
-              <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
-                <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
-              </TableCell>
-            </TableRow>
-          </template>
-          <TableRow v-else>
-            <TableCell :colspan="columns.length" class="h-24 text-center text-gray"> Нет данных </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </div>
+        </template>
+        <TableRow v-else>
+          <TableCell :colspan="columns.length" class="h-24 text-center text-gray"> Нет данных </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </div>
 
-    <!-- Create/Edit Modal -->
-    <Dialog v-model:open="isOpen">
-      <DialogContent class="sm:max-w-[720px]">
-        <DialogHeader>
-          <DialogTitle>{{ editing?.id === 0 ? 'Создать опрос' : 'Редактировать опрос' }}</DialogTitle>
-        </DialogHeader>
+  <!-- Create/Edit Modal -->
+  <Dialog v-model:open="isOpen">
+    <DialogContent class="sm:max-w-[720px]">
+      <DialogHeader>
+        <DialogTitle>{{ editing?.id === 0 ? 'Создать опрос' : 'Редактировать опрос' }}</DialogTitle>
+      </DialogHeader>
 
-        <div class="grid gap-5 mb-5">
-          <!-- Type selector -->
-          <div>
-            <label class="mb-4 block text-lg font-sans">Тип опроса</label>
-            <RadioGroup v-model="(editing as any).type" class="grid gap-3">
-              <div class="flex items-center gap-2">
-                <RadioGroupItem id="type-numeric" value="numeric" />
-                <Label for="type-numeric">Числовой (1-5)</Label>
-              </div>
-              <div class="flex items-center gap-2">
-                <RadioGroupItem id="type-descriptive" value="descriptive" />
-                <Label for="type-descriptive">Описательный</Label>
-              </div>
-            </RadioGroup>
-          </div>
-
-          <!-- Options for descriptive -->
-          <div v-if="editing?.type === 'descriptive'">
-            <label class="mb-2 block">Варианты ответа</label>
-            <div class="flex flex-col items-start gap-3 mb-3">
-              <Input v-model="newOption" placeholder="Введите вариант ответа" />
-              <Button type="button" variant="ghost" size="sm" @click="addOption"> <PlusIcon class="size-5" /> Добавить вариант</Button>
+      <div class="grid gap-5 mb-5">
+        <!-- Type selector -->
+        <div>
+          <label class="mb-4 block font-sans">Тип опроса</label>
+          <RadioGroup v-model="(editing as any).type" class="grid gap-3">
+            <div class="flex items-center gap-2">
+              <RadioGroupItem id="type-numeric" value="numeric" />
+              <Label for="type-numeric">Числовой (1-5)</Label>
             </div>
-            <ul class="space-y-2">
-              <li
-                v-for="(opt, i) in editing?.options || []"
-                :key="i"
-                class="flex items-center justify-between rounded-base border border-surface pl-5 overflow-hidden"
-              >
-                <span>{{ opt }}</span>
-                <Button type="button" variant="ghost" class="rounded-none" size="sm" @click="removeOption(i)">Удалить</Button>
-              </li>
-            </ul>
+            <div class="flex items-center gap-2">
+              <RadioGroupItem id="type-descriptive" value="descriptive" />
+              <Label for="type-descriptive">Описательный</Label>
+            </div>
+          </RadioGroup>
+        </div>
+
+        <!-- Options for descriptive -->
+        <div v-if="editing?.type === 'descriptive'">
+          <label class="mb-2 block">Варианты ответа</label>
+          <div class="flex flex-col items-start gap-3 mb-3">
+            <Input v-model="newOption" placeholder="Введите вариант ответа" />
+            <Button type="button" variant="ghost" size="sm" @click="addOption"> <PlusIcon class="size-5" /> Добавить вариант</Button>
           </div>
+          <ul class="space-y-2">
+            <li
+              v-for="(opt, i) in editing?.options || []"
+              :key="i"
+              class="flex items-center justify-between rounded-base border border-surface pl-5 overflow-hidden"
+            >
+              <span>{{ opt }}</span>
+              <Button type="button" variant="ghost" class="rounded-none" size="sm" @click="removeOption(i)">Удалить</Button>
+            </li>
+          </ul>
+        </div>
 
-          <!-- Question text -->
-          <div>
-            <label class="mb-2 block">Текст вопроса</label>
-            <Input v-model="editing!.question" placeholder="Введите текст" />
-          </div>
+        <!-- Question text -->
+        <div>
+          <label class="mb-2 block font-sans">Текст вопроса</label>
+          <Input v-model="editing!.question" placeholder="Введите текст" />
+        </div>
 
-          <!-- Assign to (Popover) -->
-          <div>
-            <label class="mb-2 block">Назначить на</label>
-            <Popover>
-              <PopoverTrigger as-child>
-                <Button variant="ghost" class="w-full bg-surface justify-between">
-                  <span class="normal-case font-body">{{ assignSummary }}</span>
-                  <ChevronDown class="size-4 opacity-60" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent class="p-3 w-(--reka-popover-trigger-width)">
-                <div class="space-y-4 grid grid-cols-2">
-                  <!-- Classes group -->
-                  <div>
-                    <span class="font-sans font-medium block mb-3">Классы</span>
+        <!-- Assign to (Popover) -->
+        <div>
+          <label class="mb-2 block font-sans">Назначить на</label>
+          <Popover>
+            <PopoverTrigger as-child>
+              <button variant="ghost" class="w-full bg-surface justify-between flex items-center gap-2 p-5 rounded-base">
+                <span class="normal-case font-body">{{ assignSummary }}</span>
+                <ChevronDown class="size-4 opacity-60" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent class="p-3 w-(--reka-popover-trigger-width)">
+              <div class="space-y-4 grid grid-cols-2">
+                <div>
+                  <span class="font-sans font-medium block mb-3">Классы</span>
 
-                    <div class="space-y-2">
-                      <div class="flex items-center gap-2">
-                        <Checkbox
-                          id="class-all"
-                          :model-value="classesAllChecked ? true : classesIndeterminate ? 'indeterminate' : false"
-                          @update:modelValue="
-                            (value: boolean | 'indeterminate') => {
-                              const checked = value === true
-                              editing!.targetClasses = checked ? [...allClasses] : []
-                            }
-                          "
-                        />
-                        <Label for="class-all">Все классы</Label>
-                      </div>
-                      <div v-for="(c, idx) in allClasses" :key="c" class="flex items-center gap-2">
-                        <Checkbox
-                          :id="'class-' + idx"
-                          :model-value="editing?.targetClasses.includes(c)"
-                          @update:modelValue="
-                            (value: boolean | 'indeterminate') => {
-                              const checked = value === true
-                              const list = new Set(editing!.targetClasses)
-                              if (checked) list.add(c)
-                              else list.delete(c)
-                              editing!.targetClasses = Array.from(list)
-                            }
-                          "
-                        />
-                        <Label :for="'class-' + idx">{{ c }}</Label>
-                      </div>
+                  <div class="space-y-2">
+                    <div class="flex items-center gap-2">
+                      <Checkbox
+                        id="class-all"
+                        :model-value="classesAllChecked ? true : classesIndeterminate ? 'indeterminate' : false"
+                        @update:modelValue="
+                          (value: boolean | 'indeterminate') => {
+                            const checked = value === true
+                            editing!.targetClasses = checked ? [...allClasses] : []
+                          }
+                        "
+                      />
+                      <Label for="class-all">Все классы</Label>
                     </div>
-                  </div>
-                  <!-- Teachers group -->
-                  <div>
-                    <span class="font-sans font-medium block mb-3">Учителя</span>
-                    <div class="space-y-2">
-                      <div class="flex items-center gap-2">
-                        <Checkbox
-                          id="teacher-all"
-                          :model-value="teachersAllChecked ? true : teachersIndeterminate ? 'indeterminate' : false"
-                          @update:modelValue="
-                            (value: boolean | 'indeterminate') => {
-                              const checked = value === true
-                              editing!.targetTeachers = checked ? [...allTeachers] : []
-                            }
-                          "
-                        />
-                        <Label for="teacher-all">Все учителя</Label>
-                      </div>
-                      <div v-for="(t, idx) in allTeachers" :key="t" class="flex items-center gap-2">
-                        <Checkbox
-                          :id="'teacher-' + idx"
-                          :model-value="editing?.targetTeachers.includes(t)"
-                          @update:modelValue="
-                            (value: boolean | 'indeterminate') => {
-                              const checked = value === true
-                              const list = new Set(editing!.targetTeachers)
-                              if (checked) list.add(t)
-                              else list.delete(t)
-                              editing!.targetTeachers = Array.from(list)
-                            }
-                          "
-                        />
-                        <Label :for="'teacher-' + idx">{{ t }}</Label>
-                      </div>
+                    <div v-for="(c, idx) in allClasses" :key="c" class="flex items-center gap-2">
+                      <Checkbox
+                        :id="'class-' + idx"
+                        :model-value="editing?.targetClasses.includes(c)"
+                        @update:modelValue="
+                          (value: boolean | 'indeterminate') => {
+                            const checked = value === true
+                            const list = new Set(editing!.targetClasses)
+                            if (checked) list.add(c)
+                            else list.delete(c)
+                            editing!.targetClasses = Array.from(list)
+                          }
+                        "
+                      />
+                      <Label :for="'class-' + idx">{{ c }}</Label>
                     </div>
                   </div>
                 </div>
-              </PopoverContent>
-            </Popover>
-          </div>
-
-          <!-- Status -->
-          <div>
-            <label class="mb-2 block">Состояние</label>
-            <Select v-model="(editing as any).status" :value="editing?.status">
-              <SelectTrigger class="w-full">
-                <SelectValue placeholder="Состояние" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="active">Активен</SelectItem>
-                <SelectItem value="closed">Завершён</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+                <!-- Teachers group -->
+                <div>
+                  <span class="font-sans font-medium block mb-3">Учителя</span>
+                  <div class="space-y-2">
+                    <div class="flex items-center gap-2">
+                      <Checkbox
+                        id="teacher-all"
+                        :model-value="teachersAllChecked ? true : teachersIndeterminate ? 'indeterminate' : false"
+                        @update:modelValue="
+                          (value: boolean | 'indeterminate') => {
+                            const checked = value === true
+                            editing!.targetTeachers = checked ? [...allTeachers] : []
+                          }
+                        "
+                      />
+                      <Label for="teacher-all">Все учителя</Label>
+                    </div>
+                    <div v-for="(t, idx) in allTeachers" :key="t" class="flex items-center gap-2">
+                      <Checkbox
+                        :id="'teacher-' + idx"
+                        :model-value="editing?.targetTeachers.includes(t)"
+                        @update:modelValue="
+                          (value: boolean | 'indeterminate') => {
+                            const checked = value === true
+                            const list = new Set(editing!.targetTeachers)
+                            if (checked) list.add(t)
+                            else list.delete(t)
+                            editing!.targetTeachers = Array.from(list)
+                          }
+                        "
+                      />
+                      <Label :for="'teacher-' + idx">{{ t }}</Label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
 
-        <DialogFooter class="sm:flex-col">
-          <Button type="button" @click="saveSurvey">Сохранить</Button>
-          <DialogClose as-child><Button type="button" variant="outline">Отмена</Button></DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  </div>
+        <!-- Status -->
+        <div>
+          <label class="mb-2 block font-sans">Состояние</label>
+          <Select v-model="(editing as any).status" :value="editing?.status">
+            <SelectTrigger class="w-full">
+              <SelectValue placeholder="Состояние" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="active">Активен</SelectItem>
+              <SelectItem value="closed">Завершён</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <DialogFooter class="sm:flex-col">
+        <Button type="button" @click="saveSurvey">Сохранить</Button>
+        <DialogClose as-child><Button type="button" variant="outline">Отмена</Button></DialogClose>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>
