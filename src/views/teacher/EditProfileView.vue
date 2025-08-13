@@ -31,7 +31,7 @@ const togglePasswordVisibility = () => {
         </div>
         <div>
           <label for="lastName" defaultValue="block  font-sans text-black mb-2">Фамилия</label>
-          <Input id="lastName" value="Иванов" />
+          <Input id="lastName" defaultValue="Иванов" />
         </div>
       </div>
 

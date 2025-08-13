@@ -10,9 +10,9 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="grid grid-cols-[130px_1fr] h-dvh items-start gap-12">
+  <div class="grid sm:grid-cols-[130px_1fr] md:h-dvh items-start gap-12 pb-20 md:pb-0">
     <Sidebar :navigation="props.navigation" />
-    <main class="container py-10">
+    <main class="container pt-20 pb-10 overflow-x-hidden">
       <router-view />
     </main>
   </div>

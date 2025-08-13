@@ -51,51 +51,45 @@ const editLesson = (lesson: { time: string; title: string }) => {
 </script>
 
 <template>
-  <div class="container">
-    <h1 class="text-4xl font-sans text-black mb-12.5">Мои уроки</h1>
-    <div v-for="group in lessonsByDate" :key="group.date" class="grid grid-cols-[120px_1fr] gap-55 mb-5 last:mb-0 pb-5 border-b border-surface">
-      <div class="flex flex-col gap-1">
-        <h2 class="text-xl/none text-black font-sans">{{ group.date }}</h2>
-        <p class="text-gray">{{ group.day }}</p>
-      </div>
-      <div class="relative pl-8">
-        <!-- Timeline line -->
-        <div v-if="group.lessons.length > 1" class="absolute left-[1.5px] top-5 bottom-5 w-0.5 bg-green"></div>
-        <div class="space-y-4">
+  <h1 class="text-4xl font-sans text-black mb-12.5">Мои уроки</h1>
+  <div v-for="group in lessonsByDate" :key="group.date" class="flex flex-col md:grid md:grid-cols-[120px_1fr] items-start gap-5 md:gap-20 lg:gap-55 mb-5 last:mb-0 pb-5 border-b border-surface">
+    <div class="flex flex-col gap-1 shrink-0">
+      <h2 class="text-xl/none text-black font-sans">{{ group.date }}</h2>
+      <p class="text-gray">{{ group.day }}</p>
+    </div>
+    <div class="relative pl-8 w-full">
+      <div v-if="group.lessons.length > 1" class="absolute left-[1.5px] top-5 bottom-5 w-0.5 bg-green"></div>
+      <div class="space-y-4">
+        <div v-for="(lesson, index) in group.lessons" class="relative bg-white p-5 sm:p-6 rounded-base border border-surface flex justify-between items-center">
           <div
-            v-for="(lesson, index) in group.lessons"
-            class="relative bg-white p-6 rounded-base border border-surface flex justify-between items-center"
-          >
-            <div
-              v-if="group.lessons.length > 1"
-              class="absolute -left-[40.3px] size-5 drop-shadow-[0_0_10px_#96C121] rounded-full bg-green"
-              :class="{
-                'top-1/2 -translate-y-1/2': index > 0 && index < group.lessons.length - 1,
-                'top-5 -translate-y-1/2': index === 0,
-                'bottom-5 translate-y-1/2': index === group.lessons.length - 1,
-              }"
-            ></div>
-            <div class="flex flex-col gap-1">
-              <span class="text-black">{{ lesson.title }}</span>
-              <span class="text-gray">{{ lesson.time }}</span>
-            </div>
-            <Dialog>
-              <DialogTrigger as-child>
-                <Button variant="ghost" size="icon" @click="editLesson(lesson)">
-                  <EditIcon class="text-gray size-5" />
-                </Button>
-              </DialogTrigger>
-              <DialogContent class="sm:max-w-[600px] pt-15">
-                <Input id="name" :defaultValue="lesson.title" />
-                <DialogFooter class="sm:flex-col">
-                  <Button type="submit">Сохранить</Button>
-                  <DialogClose as-child>
-                    <Button type="button" variant="outline">Отмена</Button>
-                  </DialogClose>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+            v-if="group.lessons.length > 1"
+            class="absolute -left-[40.3px] size-5 drop-shadow-[0_0_10px_#96C121] rounded-full bg-green"
+            :class="{
+              'top-1/2 -translate-y-1/2': index > 0 && index < group.lessons.length - 1,
+              'top-5 -translate-y-1/2': index === 0,
+              'bottom-5 translate-y-1/2': index === group.lessons.length - 1,
+            }"
+          ></div>
+          <div class="flex flex-col gap-1">
+            <span class="text-black">{{ lesson.title }}</span>
+            <span class="text-gray">{{ lesson.time }}</span>
           </div>
+          <Dialog>
+            <DialogTrigger as-child>
+              <Button variant="ghost" size="icon" @click="editLesson(lesson)">
+                <EditIcon class="text-gray size-6" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent class="sm:max-w-[600px] pt-15">
+              <Input id="name" :defaultValue="lesson.title" />
+              <DialogFooter class="sm:flex-col">
+                <Button type="submit">Сохранить</Button>
+                <DialogClose as-child>
+                  <Button type="button" variant="outline">Отмена</Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </div>

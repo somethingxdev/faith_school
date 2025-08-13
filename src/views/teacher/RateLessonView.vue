@@ -45,17 +45,13 @@ value.value = today(getLocalTimeZone())
 </script>
 
 <template>
-  <div class="grid grid-cols-[1fr_auto] gap-8 items-start">
-    <div>
+  <div class="flex gap-8 items-start">
+    <div class="w-full">
       <h1 class="text-4xl font-sans text-black mb-8">Оценка урока</h1>
 
-      <!-- Date Picker -->
-      <div class="flex items-center gap-4 mb-8">
-        <HorizontalDatePicker />
-      </div>
+      <HorizontalDatePicker />
 
-      <!-- Filters -->
-      <div class="flex gap-4 mb-8 w-full">
+      <div class="flex flex-col md:flex-row gap-5 mb-8 w-full">
         <Select>
           <SelectTrigger class="w-full">
             <SelectValue placeholder="Русский язык (3-6 лет)" />
@@ -78,18 +74,18 @@ value.value = today(getLocalTimeZone())
 
       <!-- Lessons List -->
       <div class="space-y-4">
-        <div v-for="lesson in lessons" :key="lesson.id" class="bg-white p-6 rounded-base border border-surface flex justify-between items-center">
+        <div v-for="lesson in lessons" :key="lesson.id" class="bg-white p-5 rounded-base border border-surface flex flex-col sm:flex-row items-start justify-between sm:items-center gap-3">
           <div class="flex flex-col">
             <span class="text-black">{{ lesson.subject }}</span>
             <span class="text-gray">{{ lesson.date }} | {{ lesson.time }}</span>
           </div>
-          <RouterLink to="/teacher/rate-lesson-details">
-            <Button v-if="!lesson.rated" variant="default" size="sm" class="w-[350px]">Оценить</Button>
+          <RouterLink to="/teacher/rate-lesson-details" v-if="!lesson.rated" class="w-full sm:w-auto">
+            <Button variant="default" size="sm" class="w-full sm:w-[130px] lg:w-[350px]">Оценить</Button>
           </RouterLink>
         </div>
       </div>
     </div>
 
-    <Calendar v-model="value" :weekday-format="'short'" :locale="'ru-RU'" class="rounded-base bg-white shadow" />
+    <Calendar v-model="value" :weekday-format="'short'" :locale="'ru-RU'" class="rounded-base bg-white shadow hidden xl:block" />
   </div>
 </template>

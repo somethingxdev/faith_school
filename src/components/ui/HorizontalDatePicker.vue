@@ -18,12 +18,12 @@ const getDayName = (date: any) => {
 </script>
 
 <template>
-  <div class="flex items-start gap-4">
+  <div class="flex items-start gap-2 mb-8 w-full overflow-scroll">
     <div
       v-for="date in dates"
       :key="date.toString()"
       @click="selectedDate = date"
-      class="flex flex-col items-center gap-2.5 py-3.5 justify-center w-12.5 rounded-base cursor-pointer transition-colors text-gray"
+      class="flex flex-col items-center gap-2.5 py-3.5 justify-center w-12.5 shrink-0 rounded-base cursor-pointer transition-colors text-gray"
       :class="{ 'bg-green text-white': selectedDate.compare(date) === 0, 'hover:bg-gray-100': selectedDate.compare(date) !== 0 }"
     >
       <span class="/none">{{ getDayName(date) }}</span>
